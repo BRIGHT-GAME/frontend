@@ -242,7 +242,7 @@ export function ProfilePage() {
                     <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/50 to-blue-400/50 animate-pulse"></div>
                   </div>
                 </div>
-                <p className="text-xs text-gray-500 text-center">Energy recharges 1 point every 8 hours</p>
+                <p className="text-xs text-gray-500 text-center">Energy recharges 30 points every 8 hours</p>
                 {profile && (
                   <p className="text-xs text-center mt-2">
                     {profile.energyCurrent > profile.energyMax && (
