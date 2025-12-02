@@ -251,11 +251,11 @@ export function ProfilePage() {
                           +{profile.energyCurrent - profile.energyMax} from tasks
                         </span>
                         <span className="text-gray-500 mx-2">•</span>
+                        <span className="text-gray-400">
+                        {profile.energyMax} max points: 80 by default and {profile.energyMax - 80} from balance
+                    </span>
                       </>
                     )}
-                    <span className="text-gray-400">
-                      {profile.energyMax}: from wallet
-                    </span>
                   </p>
                 )}
               </div>
