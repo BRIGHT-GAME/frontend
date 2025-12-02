@@ -2,6 +2,7 @@
 import { Star, Target, Zap, Play, Coins, CheckCircle2, Trophy } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { BuyPythiaModal } from '../components/BuyPythiaModal';
+import { DailyChestModal } from '../components/DailyChestModal';
 import { useWalletStore } from '../store/walletStore';
 import { useAuthStore } from '../store/authStore';
 import { Navbar } from '../components/Navbar';
@@ -14,6 +15,7 @@ import { EagleIcon } from '../components/EagleIcon';
 
 export function ProfilePage() {
   const [isBuyModalOpen, setIsBuyModalOpen] = useState(false);
+  const [isDailyChestModalOpen, setIsDailyChestModalOpen] = useState(false);
   const { accessToken } = useAuthStore();
   const wallet = useWallet();
   const { pythiaBalance, refreshBalance, isConnected, setWalletConnection } = useWalletStore();
@@ -23,6 +25,17 @@ export function ProfilePage() {
   const [tasksLoading, setTasksLoading] = useState(false);
 
   const [profile, setProfile] = useState<User | null>(null);
+
+  const hasSeenDailyChestModalToday = (): boolean => {
+    const today = new Date().toDateString();
+    const lastSeenDate = localStorage.getItem('dailyChestModalSeenDate');
+    return lastSeenDate === today;
+  };
+
+  const markDailyChestModalAsSeen = (): void => {
+    const today = new Date().toDateString();
+    localStorage.setItem('dailyChestModalSeenDate', today);
+  };
 
   useEffect(() => {
     if (wallet.publicKey) {
@@ -45,8 +58,21 @@ export function ProfilePage() {
   }, [accessToken]);
 
   useEffect(() => {
-    if (isConnected) refreshBalance()
-  }, [isConnected, refreshBalance])
+    if (wallet.publicKey) {
+      refreshBalance();
+    }
+  }, [wallet.publicKey, refreshBalance]);
+
+  useEffect(() => {
+    if (profile && profile.hasOpenedDailyCase === false && !hasSeenDailyChestModalToday()) {
+      setIsDailyChestModalOpen(true);
+    }
+  }, [profile]);
+
+  const handleCloseDailyChestModal = (): void => {
+    setIsDailyChestModalOpen(false);
+    markDailyChestModalAsSeen();
+  };
 
   console.log(isConnected);
  
@@ -134,7 +160,9 @@ export function ProfilePage() {
                     <span className="text-xs text-gray-400 font-semibold">$SOL BALANCE</span>
                   </div>
                 </div>
-                <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 block mb-3">{pythiaBalance} $SOL</span>
+                <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 block mb-3">
+                  {pythiaBalance !== null ? pythiaBalance.toFixed(4) : '0.0000'} $SOL
+                </span>
                 <button
                   onClick={() => setIsBuyModalOpen(true)}
                   className="w-full px-4 py-2 rounded-lg font-semibold text-xs
@@ -215,6 +243,21 @@ export function ProfilePage() {
                   </div>
                 </div>
                 <p className="text-xs text-gray-500 text-center">Energy recharges 1 point every 8 hours</p>
+                {profile && (
+                  <p className="text-xs text-center mt-2">
+                    {profile.energyCurrent > profile.energyMax && (
+                      <>
+                        <span className="text-green-400 font-semibold">
+                          +{profile.energyCurrent - profile.energyMax} from tasks
+                        </span>
+                        <span className="text-gray-500 mx-2">•</span>
+                      </>
+                    )}
+                    <span className="text-gray-400">
+                      {profile.energyMax}: from wallet
+                    </span>
+                  </p>
+                )}
               </div>
             </div>
 
@@ -222,8 +265,7 @@ export function ProfilePage() {
             {gameAccessToken !== null ? (
               profile?.energyCurrent && profile?.energyCurrent > 0 ? (
                 <a
-                //TODO: remove this after testing
-                  href={`https://backendforgames.com/runner/?walletAddress=${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjI3LCJ3YWxsZXRBZGRyZXNzIjoiMm9zYWh6ZG9UeDFuYmpUUVc2aVFWYTVqdkVrRlVNQzJ2ZWdVd2JKN1JMRkIiLCJpYXQiOjE3NjE4Njk5ODEsImV4cCI6MTc2MjQ3NDc4MX0._ElhvwPYn1I0t2rWKLJ-_G5LTprdBehgbYQIAzPqVso"}`}
+                  href={`https://backendforgames.com/runner/?walletAddress=${gameAccessToken}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full px-6 py-4 rounded-xl font-bold text-lg
@@ -286,7 +328,7 @@ export function ProfilePage() {
                       </div>
                       {task.completed ? (
                         <CheckCircle2 className="w-6 h-6 text-green-400 flex-shrink-0" />
-                      ) : (
+                      ) : task.link ? (
                         <button
                           disabled={tasksLoading}
                           onClick={() => {
@@ -313,6 +355,33 @@ export function ProfilePage() {
                         >
                           {tasksLoading ? 'Loading...' : 'Complete'}
                         </button>
+                      ) : (
+                        gameAccessToken ? (
+                          <a
+                            href={`https://backendforgames.com/runner/?walletAddress=${gameAccessToken}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-4 py-2 text-xs font-semibold rounded-lg
+                                     bg-gradient-to-r from-purple-600 to-blue-600 text-white
+                                     hover:from-purple-500 hover:to-blue-500
+                                     transition-all duration-300 flex-shrink-0
+                                     disabled:opacity-50 disabled:cursor-not-allowed
+                                     flex items-center justify-center gap-2"
+                          >
+                            <Play className="w-4 h-4" fill="currentColor" />
+                            {tasksLoading ? 'Loading...' : 'Play'}
+                          </a>
+                        ) : (
+                          <div
+                            className="px-4 py-2 text-xs font-semibold rounded-lg
+                                     bg-slate-700/50 text-gray-500
+                                     flex items-center justify-center gap-2 flex-shrink-0
+                                     cursor-not-allowed"
+                          >
+                            <Play className="w-4 h-4" fill="currentColor" />
+                            Play
+                          </div>
+                        )
                       )}
                     </div>
                   </div>
@@ -335,6 +404,12 @@ export function ProfilePage() {
             }).catch((e) => console.error('Failed to refresh profile:', e));
           }, 10000);
         }}
+      />
+
+      <DailyChestModal 
+        isOpen={isDailyChestModalOpen}
+        onClose={handleCloseDailyChestModal}
+        gameAccessToken={gameAccessToken}
       />
     
     </div>

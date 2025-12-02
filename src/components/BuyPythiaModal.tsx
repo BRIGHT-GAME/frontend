@@ -84,54 +84,6 @@ export function BuyPythiaModal({ isOpen, onClose, onSuccess }: BuyPythiaModalPro
                     <X className="w-5 h-5" />
                 </button>
 
-                {/* Header */}
-                <div className="text-center mb-6">
-                    <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30">
-                        <Coins className="w-8 h-8 text-cyan-400" />
-                    </div>
-                    
-                    <h2 className="text-2xl font-bold mb-2">
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-blue-200">
-                            Buy $SOL
-                        </span>
-                    </h2>
-                    
-                    <p className="text-sm text-gray-400">
-                        Purchase SOL with USDC
-                    </p>
-                </div>
-                
-                {/* Amount Input */}
-                <div className="mb-6">
-                    <label className="block text-white text-sm font-semibold mb-3">
-                        Amount (USDC)
-                    </label>
-                    <div className="relative">
-                        <input
-                            type="number"
-                            min="1"
-                            step="1"
-                            value={usdcAmount}
-                            onChange={(e) => setUsdcAmount(parseFloat(e.target.value))}
-                            className="w-full bg-slate-800/50 text-white px-4 py-3 rounded-lg
-                                     border border-slate-700 focus:border-cyan-500/50
-                                     focus:outline-none focus:ring-2 focus:ring-cyan-500/20
-                                     placeholder:text-gray-500 transition-all
-                                     disabled:opacity-50 disabled:cursor-not-allowed
-                                     text-lg font-semibold
-                                     [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                            disabled={loading}
-                            placeholder="10"
-                        />
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-semibold">
-                            USDC
-                        </div>
-                    </div>
-                    <p className="text-xs text-gray-500 mt-2">
-                        Minimum: 1 USDC
-                    </p>
-                </div>
-                
                 {/* Buy Button */}
                 <button
                     className="w-full px-6 py-4 rounded-xl font-bold text-base
@@ -152,7 +104,7 @@ export function BuyPythiaModal({ isOpen, onClose, onSuccess }: BuyPythiaModalPro
                     ) : (
                         <>
                             <Coins className="w-5 h-5" />
-                            Buy SOL for {usdcAmount} USDC
+                            BUY SOL
                         </>
                     )}
                 </button>

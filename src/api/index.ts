@@ -64,6 +64,7 @@ export interface User {
   totalUsers?: number;
   createdAt: string;
   updatedAt: string;
+  hasOpenedDailyCase?: boolean;
 }
 
 export interface Task {
