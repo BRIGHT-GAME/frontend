@@ -74,6 +74,7 @@ export interface Task {
   link?: string;
   condition: string;
   value: number;
+  valueType?: 'energy' | 'coins';
   createdAt?: string;
   updatedAt?: string;
   completed?: boolean;

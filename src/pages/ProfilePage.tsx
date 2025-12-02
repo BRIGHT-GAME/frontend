@@ -318,10 +318,17 @@ export function ProfilePage() {
                           <p className="text-xs text-gray-400 mb-1">{task.description}</p>
                         )}
                         <div className="flex items-center gap-2 text-xs text-gray-500">
-                          <span className="text-purple-400 font-extrabold flex items-center gap-1">
-                            <Zap className="inline w-4 h-4 text-purple-400" fill="currentColor" />
-                            {task.value}
-                          </span>
+                          {task.valueType === 'coins' ? (
+                            <span className="text-yellow-400 font-extrabold flex items-center gap-1">
+                              <Coins className="inline w-4 h-4 text-yellow-400" fill="currentColor" />
+                              {task.value} coins
+                            </span>
+                          ) : (
+                            <span className="text-purple-400 font-extrabold flex items-center gap-1">
+                              <Zap className="inline w-4 h-4 text-purple-400" fill="currentColor" />
+                              {task.value} energy
+                            </span>
+                          )}
                           {/* <span>•</span> */}
                           {/* <span>{task.condition}</span> */}
                         </div>
