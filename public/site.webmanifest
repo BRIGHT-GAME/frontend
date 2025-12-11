@@ -1,7 +1,7 @@
 {
-  "name": "Pythia",
-  "short_name": "Pythia",
-  "description": "Pythia - Your prediction platform",
+  "name": "Solana runner",
+  "short_name": "Solana runner",
+  "description": "Solana runner - Your game platform",
   "icons": [
     {
       "src": "/favicon-16x16.png",
