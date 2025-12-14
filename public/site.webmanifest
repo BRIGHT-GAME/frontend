@@ -1,7 +1,7 @@
 {
-  "name": "Solana runner",
-  "short_name": "Solana runner",
-  "description": "Solana runner - Your game platform",
+  "name": "Solana Runner",
+  "short_name": "Solana Runner",
+  "description": "Solana Runner - Your game platform",
   "icons": [
     {
       "src": "/favicon-16x16.png",
